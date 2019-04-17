@@ -6,6 +6,7 @@ Support two types of views (eventually):
 import math
 from board import Board
 
+
 class TextView:
 	def __init__(self, board=None):
 		if board is None:
@@ -30,7 +31,8 @@ class TextView:
 						print('   ', end='|')
 				print()
 			print('-'*(4*(self.b.size+int(math.sqrt(self.b.size)))-3))
-		
+
+
 class GUIView:
 	def __init__(self):
 		pass

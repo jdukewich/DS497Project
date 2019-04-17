@@ -1,6 +1,9 @@
 import math
 
+
 class Board:
+    """Class representing a sudoku board."""
+
     def __init__(self, size=9, board=None):
         self.size = size
         self.board = board
@@ -8,6 +11,7 @@ class Board:
             self.board = self.__generate_board()
 
     def __generate_board(self):
+        """Fill """
         board = [[i+j*self.size for i in range(self.size)] for j in range(self.size)]
         return board
 
