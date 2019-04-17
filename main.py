@@ -22,7 +22,10 @@ def main():
 	view2 = TextView(b2)
 	view2.print_board()
 
-	test()
+	bthree = make_board_from_dict(test())
+	b3 = Board(size=9, board=bthree)
+	view3 = TextView(b3)
+	view3.print_board()
 
 if __name__ == '__main__':
 	main()
