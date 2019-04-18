@@ -20,49 +20,37 @@ class Square:
 
 
 class Board:
-    """
-    Class representing a sudoku board.
-
-    The board is n x n in size containing n subsquares of size sqrt(n) x sqrt(n).
-    """
+    """Class representing a sudoku board."""
 
     def __init__(self, preset):
         """
         Constructor for the board.
 
-        size: the size of the sudoku square. Must be a square number (4, 9, 16, etc.). Defaults to standard 3x3
-        preset: A size x size 2D array containing the initial values of the board.
+        :param preset: n^2 x n^2 (n=1,2,...) 2D array containing the initial values of the board.
         """
 
         self.board_size = len(preset)
         self.subsquare_size = math.sqrt(self.board_size)
-        self.board = []
-
-        for r in range(self.board_size):
-            row = []
-            for c in range(self.board_size):
-                row.append(Square(r * self.board_size + c,
-                                  r,
-                                  c,
-                                  int((c // self.subsquare_size) +
-                                      self.subsquare_size * (r // self.subsquare_size) + 1),
-                                  preset[r][c]))
-            self.board.append(row)
+        self.board = preset
 
     def __str__(self):
-        """String representation for the board."""
+        """
+        String representation for the board.
+
+        :return a printable representation of the board
+        """
         string_board = ''
 
         for row in range(self.board_size):
             for col in range(self.board_size):
-                square = self.board[row][col]
+                val = self.board[row][col]
 
                 string_board += ' '
 
-                if square.value != 0:
-                    if square.value < 10:
+                if val != 0:
+                    if val < 10:
                         string_board += ' '
-                    string_board += str(square) + ' '
+                    string_board += str(val) + ' '
                 else:
                     string_board += ' ' * 3
 
@@ -80,7 +68,7 @@ class Board:
         Return the subsquare # of a position on the board.
 
         A subsquare is a sub-grouping of numbers (there are 9 for a 3x3 board) that must be all different together.
-        They are numberd across as follows:
+        They are numbered across as follows:
         1 2 3
         4 5 6
         7 8 9
@@ -103,7 +91,7 @@ class Board:
             return []
 
     def subsquare(self, sq_index):
-        """Return list of entries in subsquare of index sq (1...sqrt(size))."""
+        """Return list of entries in subsquare of index sq (...size)."""
 
         sq = []
 
@@ -114,26 +102,15 @@ class Board:
 
         return sq
 
-    def values_list(self):
-        """Return 1-D representation of board."""
-        entries = []
+    def get_value(self, coords):
+        """
+        Return the value stored in the coordinate tuple.
 
-        for row in range(self.board_size):
-            for col in range(self.board_size):
-                entries.append(self.board[row][col])
-
-        return entries
-
-    def get_entry(self, row, col):
-        """Return the current entry stored at (row, col)."""
-        return self.board[row][col]
-
-    def set_value(self, index, value):
-        """Set the value located at the index to a particular value."""
-        row = index // self.board_size
-        col = index % self.board_size
-
-        self.board[row][col].value = value
+        :param coords: (row, col) tuple, where row, col < board size
+        """
+        if coords[0] < self.board_size and coords[1] < self.board_size:
+            return self.board[coords[0]][coords[1]]
+        return 0
 
     def check_valid(self):
         """Return whether the board is valid."""

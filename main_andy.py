@@ -46,7 +46,7 @@ p_hard = [
     [14, 0, 3, 0, 0, 7, 0, 0, 0, 0, 13, 2, 0, 4, 0, 16],
 ]
 
-b = Board(jordan)
+b = Board(p_hard)
 print('Initial\n')
 print(b)
 print("Valid: " + str(b.check_valid()))
