@@ -1,3 +1,5 @@
+import csv
+
 from constraint import Problem, AllDifferentConstraint
 from classes import Board
 
@@ -50,7 +52,12 @@ p_hard = [
 
 
 def read_standard_puzzles(input_file):
+    """
+    Reads puzzles from 3x3 csv format.
 
+    :param input_file: name of input file to be read
+    :return: an array of 2D array boards
+    """
     puzzles = []
     with open(input_file) as f:
         for line in f:
@@ -62,7 +69,30 @@ def read_standard_puzzles(input_file):
     return puzzles
 
 
+def read_big_puzzle(input_file):
+    """
+    Reads one 4x4 sudoku puzzle in csv format.
+
+    :param input_file: name of input file to be read
+    :return: an array of 2D array boards
+    """
+    puzzle = []
+    infile = csv.reader(open(input_file), delimiter=',')
+
+    for row in infile:
+        print(row)
+        puzzle.append([int(entry) for entry in row])
+
+    return puzzle
+
+
 def solve_puzzles(puzzles):
+    """
+    Solves an array of sudoku puzzles, outputting each and recording runtime.
+
+    :param puzzles: an array of 2D array boards
+    :return: none
+    """
     start_time = datetime.now()     # start timer (for runtime)
 
     for puzzle_index in range(len(puzzles)):
@@ -110,6 +140,8 @@ def solve_puzzles(puzzles):
 
 
 # Solve 100 3x3 puzzles
-unsolved = read_standard_puzzles('puzzles.csv')
-solve_puzzles(unsolved)
+# unsolved = read_standard_puzzles('puzzles.csv')
+# solve_puzzles(unsolved)
 
+unsolved = read_big_puzzle('mega_puzzle.csv')
+solve_puzzles([unsolved])

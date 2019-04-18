@@ -3,22 +3,6 @@ import math
 DEFAULT_SIZE = 9        # standard sudoku size
 
 
-class Square:
-    """
-    Class representing a sudoku board square.
-    """
-
-    def __init__(self, index, row, col, subsquare, value):
-        self.index = index
-        self.row = row
-        self.col = col
-        self.subsquare = subsquare
-        self.value = value
-
-    def __repr__(self):
-        return str(self.value)
-
-
 class Board:
     """Class representing a sudoku board."""
 
@@ -30,7 +14,7 @@ class Board:
         """
 
         self.board_size = len(preset)
-        self.subsquare_size = math.sqrt(self.board_size)
+        self.subsquare_size = int(math.sqrt(self.board_size))
         self.board = preset
 
     def __str__(self):
@@ -58,7 +42,7 @@ class Board:
                 string_board += ('|' if col < self.board_size - 1 and (col + 1) % self.subsquare_size == 0 else '')
 
             # horizontal spacers between subsquares
-            string_board += '\n  ' + (('— ' * 2 * self.board_size + '\n') if row < self.board_size - 1 and (row + 1) % self.subsquare_size == 0 else '\n')
+            string_board += '\n  ' + (('- ' * 2 * self.board_size + '\n') if row < self.board_size - 1 and (row + 1) % self.subsquare_size == 0 else '\n')
 
         return string_board
 
