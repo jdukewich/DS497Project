@@ -48,54 +48,68 @@ p_hard = [
     [14, 0, 3, 0, 0, 7, 0, 0, 0, 0, 13, 2, 0, 4, 0, 16],
 ]
 
-# read in unsolved puzzles
-unsolved = []
-with open('puzzles.csv') as f:
-    for line in f:
-        to_add = [[None for i in range(9)] for j in range(9)]
-        for i in range(len(line)-2):
-            to_add[i//9][i%9] = int(line[i]) if line[i] != '.' else 0
-        unsolved.append(to_add)
 
-start_time = datetime.now()
+def read_standard_puzzles(input_file):
 
-for puzzle_index in range(len(unsolved)):
-    b = Board(unsolved[puzzle_index])
-    print('Puzzle {} (Initial)\n'.format(puzzle_index + 1))
-    print(b)
-    print("Valid: " + str(b.check_valid()))
-    print('\n\n\n')
+    puzzles = []
+    with open(input_file) as f:
+        for line in f:
+            to_add = [[None for i in range(9)] for j in range(9)]
+            for i in range(len(line)-2):
+                to_add[i // 9][i % 9] = int(line[i]) if line[i] != '.' else 0
+            puzzles.append(to_add)
 
-    # initialize CSP
-    sudoku = Problem()
+    return puzzles
 
-    # add variables for each square, indexed 1...size^2
-    for index in range(b.board_size ** 2):
-        value = b.get_value(index)
 
-        if value == 0:
-            sudoku.addVariable(index, range(1, b.board_size + 1))
-        else:
-            sudoku.addVariable(index, [value])
+def solve_puzzles(puzzles):
+    start_time = datetime.now()     # start timer (for runtime)
 
-    # add uniqueness constraints to each row, column, and subsquare
-    for i in range(b.board_size):
-        sudoku.addConstraint(AllDifferentConstraint(), [el[0] for el in b.row(i)])
-        sudoku.addConstraint(AllDifferentConstraint(), [el[0] for el in b.col(i)])
-        sudoku.addConstraint(AllDifferentConstraint(), [el[0] for el in b.subsquare(i)])
+    for puzzle_index in range(len(puzzles)):
+        # initialize Board
+        b = Board(puzzles[puzzle_index])
 
-    # solve CSP
-    sln = sudoku.getSolution()
+        # log initial
+        print('Puzzle {} (Initial)\n'.format(puzzle_index + 1))
+        print(b)
+        print("Consistent: " + str(b.check_valid()))
+        print('\n\n\n')
 
-    # assign solved values
-    for index, value in sln.items():
-        b.set_value(index, value)
+        sudoku = Problem()      # initialize CSP
 
-    print('Puzzle {} (Solved)\n'.format(puzzle_index + 1))
-    print(b)
-    print("Valid: " + str(b.check_valid()))
-    print('\n\n\n')
+        # add variables for each square, indexed 1...size^2
+        for index in range(b.board_size ** 2):
+            value = b.get_value(index)
 
-runtime = datetime.now() - start_time
+            if value == 0:
+                sudoku.addVariable(index, range(1, b.board_size + 1))
+            else:
+                sudoku.addVariable(index, [value])
 
-print("Runtime: {} seconds".format(runtime.total_seconds()))
+        # add uniqueness constraints to each row, column, and subsquare
+        for i in range(b.board_size):
+            sudoku.addConstraint(AllDifferentConstraint(), [el[0] for el in b.row(i)])
+            sudoku.addConstraint(AllDifferentConstraint(), [el[0] for el in b.col(i)])
+            sudoku.addConstraint(AllDifferentConstraint(), [el[0] for el in b.subsquare(i)])
+
+        sln = sudoku.getSolution()      # solve CSP
+
+        # assign solved values
+        for index, value in sln.items():
+            b.set_value(index, value)
+
+        # log solution
+        print('Puzzle {} (Solved)\n'.format(puzzle_index + 1))
+        print(b)
+        print("Valid: " + str(b.check_valid()))
+        print('\n\n\n')
+
+    # perform/display runtime calculation
+    runtime = datetime.now() - start_time
+    print("Runtime: {} seconds".format(runtime.total_seconds()))
+
+
+# Solve 100 3x3 puzzles
+unsolved = read_standard_puzzles('puzzles.csv')
+solve_puzzles(unsolved)
+
