@@ -63,6 +63,15 @@ class Board:
         return string_board
 
     @staticmethod
+    def index_to_coords(size, index):
+        """Convert an index to a a sudoku square to its coordinate value.
+
+        :param size: the side length of the sudoku square
+        :param index: the index of the square
+        """
+        return index // size, index % size
+
+    @staticmethod
     def subsquare_index(board, row, col):
         """
         Return the subsquare # of a position on the board.
@@ -102,14 +111,17 @@ class Board:
 
         return sq
 
-    def get_value(self, coords):
+    def get_value(self, location):
         """
         Return the value stored in the coordinate tuple.
 
-        :param coords: (row, col) tuple, where row, col < board size
+        :param location: either (row, col) tuple, where row, col < board size or an index (0...size^2)
         """
+        if type(location) == int:
+            location = Board.index_to_coords(self.board_size, location)
         if coords[0] < self.board_size and coords[1] < self.board_size:
-            return self.board[coords[0]][coords[1]]
+                return self.board[coords[0]][coords[1]]
+
         return 0
 
     def check_valid(self):
