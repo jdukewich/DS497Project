@@ -55,7 +55,7 @@ print('\n\n\n')
 sudoku = Problem()
 
 # add variables for each square, indexed 1...size^2
-for index in range(b.board_size^2):
+for index in range(b.board_size ** 2):
     value = b.get_value(index)
 
     if value == 0:
@@ -65,12 +65,13 @@ for index in range(b.board_size^2):
 
 # add uniqueness constraints to each row, column, and subsquare
 for i in range(b.board_size):
-    sudoku.addConstraint(AllDifferentConstraint(), [r.index for r in b.row(i)])
-    sudoku.addConstraint(AllDifferentConstraint(), [c.index for c in b.col(i)])
-    sudoku.addConstraint(AllDifferentConstraint(), [sq.index for sq in b.subsquare(i + 1)])
+    sudoku.addConstraint(AllDifferentConstraint(), b.row(i))
+    sudoku.addConstraint(AllDifferentConstraint(), b.col(i))
+    sudoku.addConstraint(AllDifferentConstraint(), b.subsquare(i))
 
 # solve CSP
 sln = sudoku.getSolution()
+
 # assign solved values
 for index, value in sln.items():
     b.set_value(index, value)

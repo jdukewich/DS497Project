@@ -84,7 +84,7 @@ class Board:
         7 8 9
         Where each index represents a group of additional numbers.
         """
-        return int((col // board.subsquare_size) + board.subsquare_size * (row // board.subsquare_size) + 1)
+        return int((col // board.subsquare_size) + board.subsquare_size * (row // board.subsquare_size))
 
     def row(self, row):
         """Return list of entries in row of board (0...size-1)."""
@@ -156,19 +156,19 @@ class Board:
         """Return whether the board is valid."""
         for i in range(self.board_size):
             # check rows
-            r = [entry.value for entry in list(filter(lambda x: x.value != 0, self.row(i)))]
+            r = list(filter(lambda x: x != 0, self.row(i)))
 
             if len(r) != len(set(r)):
                 return False
 
             # check columns
-            c = [entry.value for entry in list(filter(lambda x: x.value != 0, self.col(i)))]
+            c = list(filter(lambda x: x != 0, self.col(i)))
 
             if len(c) != len(set(c)):
                 return False
 
             # check subsquares
-            sq = [entry.value for entry in list(filter(lambda x:x.value != 0, self.subsquare(i + 1)))]
+            sq = list(filter(lambda x: x != 0, self.subsquare(i + 1)))
 
             if len(sq) != len(set(sq)):
                 return False
