@@ -1,6 +1,8 @@
 from constraint import Problem, AllDifferentConstraint
 from classes import Board
 
+from datetime import datetime
+
 # preset puzzle
 p = [
     [0, 0, 0, 0, 8, 2, 0, 0, 9],
@@ -46,37 +48,54 @@ p_hard = [
     [14, 0, 3, 0, 0, 7, 0, 0, 0, 0, 13, 2, 0, 4, 0, 16],
 ]
 
-b = Board(p)
-print('Initial\n')
-print(b)
-print("Valid: " + str(b.check_valid()))
-print('\n\n\n')
+# read in unsolved puzzles
+unsolved = []
+with open('puzzles.csv') as f:
+    for line in f:
+        to_add = [[None for i in range(9)] for j in range(9)]
+        for i in range(len(line)-2):
+            to_add[i//9][i%9] = int(line[i]) if line[i] != '.' else 0
+        unsolved.append(to_add)
 
-sudoku = Problem()
+start_time = datetime.now()
 
-# add variables for each square, indexed 1...size^2
-for index in range(b.board_size ** 2):
-    value = b.get_value(index)
+for puzzle_index in range(len(unsolved)):
+    b = Board(unsolved[puzzle_index])
+    print('Puzzle {} (Initial)\n'.format(puzzle_index + 1))
+    print(b)
+    print("Valid: " + str(b.check_valid()))
+    print('\n\n\n')
 
-    if value == 0:
-        sudoku.addVariable(index, range(1, b.board_size + 1))
-    else:
-        sudoku.addVariable(index, [value])
+    # initialize CSP
+    sudoku = Problem()
 
-# add uniqueness constraints to each row, column, and subsquare
-for i in range(b.board_size):
-    sudoku.addConstraint(AllDifferentConstraint(), [el[0] for el in b.row(i)])
-    sudoku.addConstraint(AllDifferentConstraint(), [el[0] for el in b.col(i)])
-    sudoku.addConstraint(AllDifferentConstraint(), [el[0] for el in b.subsquare(i)])
+    # add variables for each square, indexed 1...size^2
+    for index in range(b.board_size ** 2):
+        value = b.get_value(index)
 
-# solve CSP
-sln = sudoku.getSolution()
+        if value == 0:
+            sudoku.addVariable(index, range(1, b.board_size + 1))
+        else:
+            sudoku.addVariable(index, [value])
 
-# assign solved values
-for index, value in sln.items():
-    b.set_value(index, value)
+    # add uniqueness constraints to each row, column, and subsquare
+    for i in range(b.board_size):
+        sudoku.addConstraint(AllDifferentConstraint(), [el[0] for el in b.row(i)])
+        sudoku.addConstraint(AllDifferentConstraint(), [el[0] for el in b.col(i)])
+        sudoku.addConstraint(AllDifferentConstraint(), [el[0] for el in b.subsquare(i)])
 
-print('Solved\n')
-print(b)
-print("Valid: " + str(b.check_valid()))
+    # solve CSP
+    sln = sudoku.getSolution()
 
+    # assign solved values
+    for index, value in sln.items():
+        b.set_value(index, value)
+
+    print('Puzzle {} (Solved)\n'.format(puzzle_index + 1))
+    print(b)
+    print("Valid: " + str(b.check_valid()))
+    print('\n\n\n')
+
+runtime = datetime.now() - start_time
+
+print("Runtime: {} seconds".format(runtime.total_seconds()))
