@@ -68,6 +68,7 @@ class Board:
 
         :param size: the side length of the sudoku square
         :param index: the index of the square
+        :return a tuple (row, col) that corresponds to the index entry
         """
         return index // size, index % size
 
@@ -117,10 +118,15 @@ class Board:
 
         :param location: either (row, col) tuple, where row, col < board size or an index (0...size^2)
         """
+        # convert index to a tuple of coordinate pairs
         if type(location) == int:
             location = Board.index_to_coords(self.board_size, location)
-        if coords[0] < self.board_size and coords[1] < self.board_size:
-                return self.board[coords[0]][coords[1]]
+
+        row = location[0]
+        col = location[1]
+
+        if row < self.board_size and col < self.board_size:
+                return self.board[row][col]
 
         return 0
 
