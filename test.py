@@ -4,10 +4,11 @@ pip install python-constraint
 from constraint import *
 import numpy as np
 
+
 def test():
-	problem = Problem()
-	for i in range(81):
-	    problem.addVariable(i, [1,2,3,4,5,6,7,8,9])
+    problem = Problem()
+    for i in range(81):
+        problem.addVariable(i, [1,2,3,4,5,6,7,8,9])
 
 	rows = np.array([i for i in range(0,9)])
 	cols = np.array([j for j in range(0,81,9)])
@@ -39,5 +40,5 @@ def test():
 
 
 def make_board_from_dict(board):
-  new_board = [[board[i+9*j] for i in range(9)] for j in range(9)]
-  return new_board
+	new_board = [[board[i+9*j] for i in range(9)] for j in range(9)]
+  	return new_board
