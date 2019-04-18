@@ -46,7 +46,7 @@ p_hard = [
     [14, 0, 3, 0, 0, 7, 0, 0, 0, 0, 13, 2, 0, 4, 0, 16],
 ]
 
-b = Board(p_hard)
+b = Board(p)
 print('Initial\n')
 print(b)
 print("Valid: " + str(b.check_valid()))
@@ -55,12 +55,13 @@ print('\n\n\n')
 sudoku = Problem()
 
 # add variables for each square, indexed 1...size^2
-for row in range(b.board_size):
-    for col in range(b.board_size):
-        if b.get_entry(row, col).value == 0:
-            sudoku.addVariable(b.get_entry(row, col).index, range(1, b.board_size + 1))
-        else:
-            sudoku.addVariable(b.get_entry(row, col).index, [b.get_entry(row, col).value])
+for index in range(b.board_size^2):
+    value = b.get_value(index)
+
+    if value == 0:
+        sudoku.addVariable(index, range(1, b.board_size + 1))
+    else:
+        sudoku.addVariable(index, [value])
 
 # add uniqueness constraints to each row, column, and subsquare
 for i in range(b.board_size):
