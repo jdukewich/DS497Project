@@ -58,13 +58,14 @@ class Board:
                 string_board += ('|' if col < self.board_size - 1 and (col + 1) % self.subsquare_size == 0 else '')
 
             # horizontal spacers between subsquares
-            string_board += '\n' + (('— ' * 2 * self.board_size + '\n') if row < self.board_size - 1 and (row + 1) % self.subsquare_size == 0 else '\n')
+            string_board += '\n  ' + (('— ' * 2 * self.board_size + '\n') if row < self.board_size - 1 and (row + 1) % self.subsquare_size == 0 else '\n')
 
         return string_board
 
     @staticmethod
     def index_to_coords(size, index):
-        """Convert an index to a a sudoku square to its coordinate value.
+        """
+        Convert an index to a a sudoku square to its coordinate value.
 
         :param size: the side length of the sudoku square
         :param index: the index of the square
@@ -73,42 +74,69 @@ class Board:
         return index // size, index % size
 
     @staticmethod
+    def coords_to_index(size, row, col):
+        """
+        Convert a coordinate in a sudoku square to its index value.
+
+        :param size: the side length of a sudoku square
+        :param row: the row coordinate
+        :param col: the col coordinate
+        :return the index that corresponds to the coordinates
+        """
+        return row * size + col
+
+    @staticmethod
     def subsquare_index(board, row, col):
         """
         Return the subsquare # of a position on the board.
 
         A subsquare is a sub-grouping of numbers (there are 9 for a 3x3 board) that must be all different together.
         They are numbered across as follows:
-        1 2 3
-        4 5 6
-        7 8 9
+        0 1 2
+        3 4 5
+        6 7 8
         Where each index represents a group of additional numbers.
         """
         return int((col // board.subsquare_size) + board.subsquare_size * (row // board.subsquare_size))
 
     def row(self, row):
-        """Return list of entries in row of board (0...size-1)."""
+        """
+        Return list of entries in row of board (0...size-1).
+
+        :param row: the index of the row
+        :return either an empty list (invalid input) or a list of entries in the row
+        """
         if row <= self.board_size:
-            return self.board[row]
+            return list(zip([Board.coords_to_index(self.board_size, row, x) for x in range(self.board_size)], self.board[row]))
         else:
             return []
 
     def col(self, col):
-        """Return list of entries in col of board (0...size-1)."""
+        """
+        Return list of entries in col of board (0...size-1).
+
+        :param col: the index of the column
+        :return either an empty list (invalid input) or a list of entries in the column
+        """
         if col <= self.board_size:
-            return [el[col] for el in self.board]
+            return list(zip([Board.coords_to_index(self.board_size, x, col) for x in range(self.board_size)], [el[col] for el in self.board]))
         else:
             return []
 
     def subsquare(self, sq_index):
-        """Return list of entries in subsquare of index sq (...size)."""
+        """
+        Return list of entries in subsquare of index sq (0...size-1).
+
+        :param sq_index: the index of the subsquare
+        :return a list of entries in the subsquare
+        """
 
         sq = []
 
         for row in range(self.board_size):
             for col in range(self.board_size):
                 if Board.subsquare_index(self, row, col) == sq_index:
-                    sq.append(self.board[row][col])
+                    sq.append((Board.coords_to_index(self.board_size, row, col), self.board[row][col]))
 
         return sq
 
@@ -153,7 +181,11 @@ class Board:
         return False
 
     def check_valid(self):
-        """Return whether the board is valid."""
+        """
+        Return whether the board is valid.
+
+        :return whether the board is consistent
+        """
         for i in range(self.board_size):
             # check rows
             r = list(filter(lambda x: x != 0, self.row(i)))

@@ -65,9 +65,9 @@ for index in range(b.board_size ** 2):
 
 # add uniqueness constraints to each row, column, and subsquare
 for i in range(b.board_size):
-    sudoku.addConstraint(AllDifferentConstraint(), b.row(i))
-    sudoku.addConstraint(AllDifferentConstraint(), b.col(i))
-    sudoku.addConstraint(AllDifferentConstraint(), b.subsquare(i))
+    sudoku.addConstraint(AllDifferentConstraint(), [el[0] for el in b.row(i)])
+    sudoku.addConstraint(AllDifferentConstraint(), [el[0] for el in b.col(i)])
+    sudoku.addConstraint(AllDifferentConstraint(), [el[0] for el in b.subsquare(i)])
 
 # solve CSP
 sln = sudoku.getSolution()
