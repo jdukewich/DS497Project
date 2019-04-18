@@ -1,6 +1,6 @@
 import csv
 
-from constraint import Problem, AllDifferentConstraint
+from constraint import Problem, AllDifferentConstraint, RecursiveBacktrackingSolver
 from classes import Board
 
 from datetime import datetime
@@ -80,7 +80,6 @@ def read_big_puzzle(input_file):
     infile = csv.reader(open(input_file), delimiter=',')
 
     for row in infile:
-        print(row)
         puzzle.append([int(entry) for entry in row])
 
     return puzzle
@@ -105,7 +104,7 @@ def solve_puzzles(puzzles):
         print("Consistent: " + str(b.check_valid()))
         print('\n\n\n')
 
-        sudoku = Problem()      # initialize CSP
+        sudoku = Problem(RecursiveBacktrackingSolver())      # initialize CSP
 
         # add variables for each square, indexed 1...size^2
         for index in range(b.board_size ** 2):
@@ -124,15 +123,18 @@ def solve_puzzles(puzzles):
 
         sln = sudoku.getSolution()      # solve CSP
 
-        # assign solved values
-        for index, value in sln.items():
-            b.set_value(index, value)
+        if sln:
+            # assign solved values
+            for index, value in sln.items():
+                b.set_value(index, value)
 
-        # log solution
-        print('Puzzle {} (Solved)\n'.format(puzzle_index + 1))
-        print(b)
-        print("Valid: " + str(b.check_valid()))
-        print('\n\n\n')
+            # log solution
+            print('Puzzle {} (Solved)\n'.format(puzzle_index + 1))
+            print(b)
+            print("Valid: " + str(b.check_valid()))
+            print('\n\n\n')
+        else:
+            print('The puzzle could not be solved.\n\n')
 
     # perform/display runtime calculation
     runtime = datetime.now() - start_time
@@ -140,8 +142,9 @@ def solve_puzzles(puzzles):
 
 
 # Solve 100 3x3 puzzles
-# unsolved = read_standard_puzzles('puzzles.csv')
-# solve_puzzles(unsolved)
+unsolved = read_standard_puzzles('puzzles.csv')
+solve_puzzles(unsolved)
 
-unsolved = read_big_puzzle('mega_puzzle2.csv')
-solve_puzzles([unsolved])
+# solve a 4x4 puzzle
+# unsolved = read_standard_puzzles('mega_puzzle2.csv')
+# solve_puzzles([unsolved])
