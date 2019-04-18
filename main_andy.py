@@ -143,5 +143,5 @@ def solve_puzzles(puzzles):
 # unsolved = read_standard_puzzles('puzzles.csv')
 # solve_puzzles(unsolved)
 
-unsolved = read_big_puzzle('mega_puzzle.csv')
+unsolved = read_big_puzzle('mega_puzzle2.csv')
 solve_puzzles([unsolved])
