@@ -51,22 +51,28 @@ class Board:
 
     def __str__(self):
         """String representation for the board."""
-        b = ''
+        string_board = ''
 
         for row in range(self.board_size):
             for col in range(self.board_size):
-                if self.board[row][col] != 0:
-                    b += str(self.board[row][col])
-                else:
-                    b += ' ' * len(str(self.board[row][col]))
+                square = self.board[row][col]
 
-                # vertical spacers between subsquares
-                b += (' |' if col < self.board_size - 1 and (col + 1) % self.subsquare_size == 0 else '') + '\t'
+                string_board += ' '
+
+                if square.value != 0:
+                    if square.value < 10:
+                        string_board += ' '
+                    string_board += str(square) + ' '
+                else:
+                    string_board += ' ' * 3
+
+                # add vertical spacers between subsquares
+                string_board += ('|' if col < self.board_size - 1 and (col + 1) % self.subsquare_size == 0 else '')
 
             # horizontal spacers between subsquares
-            b += '\n' + (('— ' * 2 * self.board_size + '\n') if row < self.board_size - 1 and (row + 1) % self.subsquare_size == 0 else '\n')
+            string_board += '\n' + (('— ' * 2 * self.board_size + '\n') if row < self.board_size - 1 and (row + 1) % self.subsquare_size == 0 else '\n')
 
-        return b
+        return string_board
 
     @staticmethod
     def subsquare_index(board, row, col):
@@ -118,12 +124,12 @@ class Board:
 
         return entries
 
-    def get_value(self, row, col):
-        """Return the current value stored at (row, col)."""
+    def get_entry(self, row, col):
+        """Return the current entry stored at (row, col)."""
         return self.board[row][col]
 
-    def set_entry(self, index, value):
-        """Set the entry located at the index to a particular value."""
+    def set_value(self, index, value):
+        """Set the value located at the index to a particular value."""
         row = index // self.board_size
         col = index % self.board_size
 

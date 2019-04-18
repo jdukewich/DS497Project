@@ -1,8 +1,10 @@
 """
 pip install python-constraint
+pip install numpy
 """
 from constraint import *
 import numpy as np
+<<<<<<< HEAD
 
 
 def test():
