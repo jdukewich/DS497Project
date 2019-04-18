@@ -117,6 +117,7 @@ class Board:
         Return the value stored in the coordinate tuple.
 
         :param location: either (row, col) tuple, where row, col < board size or an index (0...size^2)
+        :return the value at the location, or 0 otherwise
         """
         # convert index to a tuple of coordinate pairs
         if type(location) == int:
@@ -126,9 +127,30 @@ class Board:
         col = location[1]
 
         if row < self.board_size and col < self.board_size:
-                return self.board[row][col]
+            return self.board[row][col]
 
         return 0
+
+    def set_value(self, location, new_value):
+        """
+        Set the value at the location to a new value.
+
+        :param location: either (row, col) tuple, where row, col < board size or an index (0...size^2)
+        :param new_value: the new value to be stored at the location
+        :return: success flag
+        """
+        # convert index to a tuple of coordinate pairs
+        if type(location) == int:
+            location = Board.index_to_coords(self.board_size, location)
+
+        row = location[0]
+        col = location[1]
+
+        if row < self.board_size and col < self.board_size:
+            self.board[row][col] = new_value
+            return True
+
+        return False
 
     def check_valid(self):
         """Return whether the board is valid."""
