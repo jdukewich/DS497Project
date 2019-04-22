@@ -85,6 +85,27 @@ def read_big_puzzle(input_file):
     return puzzle
 
 
+def mass_read_16(input_file):
+    """
+    Reads multiple 4x4 sudoku puzzle in csv format.
+
+    :param input_file: name of input file to be read
+    :return: an array of 2D array boards
+    """
+    read_puzzles = []
+    with open('16x16.csv', 'r') as f:
+        reader = csv.reader(f, delimiter=',')
+        for row in reader:
+            to_add = []
+            for i in range(16):
+                add_row = []
+                for j in range(16):
+                    add_row.append(int(row[16*i+j]))
+                to_add.append(add_row)
+            read_puzzles.append(to_add)
+    return read_puzzles
+
+
 def solve_puzzles(puzzles):
     """
     Solves an array of sudoku puzzles, outputting each and recording runtime.
@@ -148,3 +169,7 @@ solve_puzzles(unsolved)
 # solve a 4x4 puzzle
 # unsolved = read_standard_puzzles('mega_puzzle2.csv')
 # solve_puzzles([unsolved])
+
+# solve 50 16x16 puzzles
+unsolved = mass_read_16('16x16.csv')
+solve_puzzles(unsolved)

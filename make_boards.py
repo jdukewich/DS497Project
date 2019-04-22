@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
 import csv
-import math
 
 
 def generate():
@@ -62,17 +61,3 @@ def generate():
 
             for puzzle in big_puzzles:
                 writer.writerow(puzzle[i] for i in range(len(puzzle)))
-
-    read_puzzles = []
-    with open('16x16.csv', 'r') as f:
-        reader = csv.reader(f, delimiter=',')
-        for row in reader:
-            to_add = []
-            for i in range(int(math.sqrt(len(row)))):
-                add_row = []
-                for j in range(int(math.sqrt(len(row)))):
-                    add_row.append(int(row[int(math.sqrt(len(row)))*i+j]))
-                to_add.append(add_row)
-            read_puzzles.append(to_add)
-    return read_puzzles
-
