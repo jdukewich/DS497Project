@@ -1,6 +1,7 @@
 import csv
 
-from constraint import Problem, AllDifferentConstraint, RecursiveBacktrackingSolver
+from constraint import Problem, AllDifferentConstraint
+from csp import RecursiveBacktrackingSolver
 from classes import Board
 
 from datetime import datetime
