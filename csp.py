@@ -96,8 +96,7 @@ class RecursiveBacktrackingSolver(Solver):
         ################################################
         # Change heuristics for order of domain values #
         ################################################
-
-        newlst = heuristic.value_heuristic(domains[variable], 'none')
+        newlst = heuristic.value_heuristic(assignments, domains, domains[variable], 'none')
 
         for value in newlst:
             assignments[variable] = value
