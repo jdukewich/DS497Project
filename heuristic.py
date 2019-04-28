@@ -166,14 +166,6 @@ def mrv_and_random(domains):
     return lst
 
 
-def spatial_locality():
-    pass
-
-
-def temporal_locality():
-    pass
-
-
 # END SELECT-UNASSIGNED-VARIABLE HEURISTICS
 
 # BEGIN SELECT-VALUE-FROM-DOMAIN HEURISTICS
@@ -191,12 +183,26 @@ def random_value(domain):
 
 def lcv(domains, domain):
     """
+    Sort by the values that affect the least amount of constraints (i.e. sort by number of times each
+    value appears in domains)
 
     :param domains: the dict of {variable: [domain values], ...}
     :param domain: an array of remaining domain values
-    :return:
+    :return: an array sorted by the values that constrain the least amount of other variables
     """
-    return domain
+    # Initialize array for count of each value
+    count = [0 for i in range(int(math.sqrt(len(domains))))]
+
+    # Iterate through domains, counting each time the values are used
+    for dom in domains.items():
+        for val in dom[1]:
+            count[val-1] += 1
+
+    # Now sort by the count of each value
+    domain_count = [(count[val-1], val) for val in domain]
+    domain_count.sort()
+    new_domain = [val[1] for val in domain_count]
+    return new_domain
 
 
 def least_used(assignments, domains, domain):
