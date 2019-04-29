@@ -164,13 +164,13 @@ def solve_puzzles(puzzles):
 
 
 # Solve 100 3x3 puzzles
-unsolved = read_standard_puzzles('puzzles.csv')
-solve_puzzles(unsolved)
+# unsolved = read_standard_puzzles('puzzles.csv')
+# solve_puzzles(unsolved)
 
 # solve a 4x4 puzzle
-# unsolved = read_standard_puzzles('mega_puzzle2.csv')
-# solve_puzzles([unsolved])
+unsolved = read_big_puzzle('mega_puzzle3.csv')
+solve_puzzles([unsolved])
 
 # solve 50 16x16 puzzles
-unsolved = mass_read_16('16x16.csv')
-solve_puzzles(unsolved)
+# unsolved = mass_read_16('16x16.csv')
+# solve_puzzles(unsolved)
