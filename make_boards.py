@@ -8,7 +8,7 @@ def generate():
     Makes post requests to a website to generate 16 by 16 sudoku boards. Uses BeautifulSoup to parse the HTML
     and then writes to a CSV.
     """
-    with open('16x16.csv', 'w') as csvfile:
+    with open('jumbo_size_sudokus.csv', 'w') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
 
         # Can change this for more puzzles, each post request makes 5 puzzles

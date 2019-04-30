@@ -27,11 +27,11 @@
 
 from __future__ import absolute_import, division, print_function
 
-import heuristic
+from heuristics import variable_heuristic, value_heuristic
 from constraint import Solver
 
 
-class RecursiveBacktrackingSolver(Solver):
+class HeuristicRecursiveBacktrackingSolver(Solver):
     """
     Recursive problem solver with backtracking capabilities
     Examples:
@@ -55,14 +55,25 @@ class RecursiveBacktrackingSolver(Solver):
     NotImplementedError: RecursiveBacktrackingSolver doesn't provide iteration
     """
 
-    def __init__(self, forwardcheck=True):
+    def __init__(self, value_heuristic_id=None, variable_heuristic_id=None, forwardcheck=True):
         """
+        @param variable_heuristic: string identifier of the variable heuristic to use
+                                   choose from {degree, mrv, random, deg+mrv, mrv+random}
+                                   leave blank for no variable heuristic
+
+        @param value_heuristic: string identifier of the value heruistic to use
+                                choose from {random, lcv, least_used}
+                                leave blank for no value heuristic
+
         @param forwardcheck: If false forward checking will not be requested
                              to constraints while looking for solutions
                              (default is true)
         @type  forwardcheck: bool
         """
         self._forwardcheck = forwardcheck
+
+        self._variable_heuristic_id = variable_heuristic_id
+        self._value_heuristic_id = value_heuristic_id
 
     def recursiveBacktracking(
         self, solutions, domains, vconstraints, assignments, single
@@ -73,7 +84,7 @@ class RecursiveBacktrackingSolver(Solver):
         ##############################################################
         # Use different heuristics for selecting unassigned variable #
         ##############################################################
-        lst = heuristic.variable_heuristic(domains, vconstraints, 'mrv')
+        lst = variable_heuristic(domains, vconstraints, self._variable_heuristic_id)
 
         for item in lst:
             if item[-1] not in assignments:
@@ -96,7 +107,7 @@ class RecursiveBacktrackingSolver(Solver):
         ################################################
         # Change heuristics for order of domain values #
         ################################################
-        newlst = heuristic.value_heuristic(assignments, domains, domains[variable], 'none')
+        newlst = value_heuristic(assignments, domains, domains[variable], self._value_heuristic_id)
 
         for value in newlst:
             assignments[variable] = value
